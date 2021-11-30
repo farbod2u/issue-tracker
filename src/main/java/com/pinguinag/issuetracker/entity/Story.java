@@ -30,7 +30,7 @@ public class Story {
 
     @PrePersist
     void defaultValues(){
-        this.creationDate = LocalDateTime.now();
+        //this.creationDate = LocalDateTime.now();
     }
 
     @ManyToOne

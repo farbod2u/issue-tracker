@@ -17,12 +17,12 @@ public class DeveloperController {
     private final DeveloperService developerService;
 /***/
     @GetMapping
-    public List<Developer> getAll() {
+    public List<Developer> getAll() throws Exception {
         return developerService.getAll();
     }
 
     @GetMapping("/{id}")
-    public Developer get(@PathVariable Integer id) {
+    public Developer get(@PathVariable Integer id) throws Exception {
         return developerService.get(id);
     }
 
@@ -32,7 +32,7 @@ public class DeveloperController {
     }
 
     @PutMapping
-    public Developer update(@RequestBody Developer entity) {
+    public Developer update(@RequestBody Developer entity) throws Exception {
         return developerService.update(entity);
     }
 }

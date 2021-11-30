@@ -2,6 +2,7 @@ package com.pinguinag.issuetracker.service;
 
 import com.pinguinag.issuetracker.entity.Developer;
 import com.pinguinag.issuetracker.repository.DeveloperRepository;
+import com.pinguinag.issuetracker.repository.StoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,20 +16,20 @@ public class DeveloperService {
 
     private final DeveloperRepository developerRepository;
 
-    public List<Developer> getAll() throws RuntimeException {
+    public List<Developer> getAll() throws Exception {
         List<Developer> res = developerRepository.findAll();
         if (res != null && res.size() > 0)
             return res;
         else
-            throw new RuntimeException("developers is empty");
+            throw new Exception("developers is empty");
     }
 
-    public Developer get(Integer id) {
+    public Developer get(Integer id) throws Exception {
         Optional<Developer> res = developerRepository.findById(id);
         if (res.isPresent())
             return res.get();
         else
-            throw new RuntimeException("developer not found");
+            throw new Exception("developer not found");
     }
 
     public Developer getByName(String name) {
@@ -40,7 +41,7 @@ public class DeveloperService {
     }
 
     @Transactional(rollbackOn = Exception.class)
-    public Developer update(Developer entity) {
+    public Developer update(Developer entity) throws Exception {
         Developer originalEntity = this.get(entity.getId());
         originalEntity.setName(entity.getName());
         return originalEntity;
