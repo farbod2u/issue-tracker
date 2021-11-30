@@ -15,7 +15,7 @@ import java.util.List;
 public class DeveloperController {
 
     private final DeveloperService developerService;
-
+/***/
     @GetMapping
     public List<Developer> getAll() {
         return developerService.getAll();
