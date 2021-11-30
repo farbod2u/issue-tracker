@@ -5,7 +5,9 @@ import com.pinguinag.issuetracker.repository.DeveloperRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,8 +27,20 @@ public class DeveloperService {
         return developerRepository.findByName(name);
     }
 
-    public Developer save(Developer entity){
+    public Developer save(Developer entity) {
         return developerRepository.save(entity);
+    }
+
+    @Transactional(rollbackOn = Exception.class)
+    public Developer update(Developer entity) {
+        Optional<Developer> byId = developerRepository.findById(entity.getId());
+
+        if (byId.isPresent()) {
+            Developer originalEntity = byId.get();
+            originalEntity.setName(entity.getName());
+            return originalEntity;
+        } else
+            return null;
     }
 
 }
