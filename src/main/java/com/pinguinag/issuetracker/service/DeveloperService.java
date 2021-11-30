@@ -15,15 +15,23 @@ public class DeveloperService {
 
     private final DeveloperRepository developerRepository;
 
-    public List<Developer> getAll(){
-        return developerRepository.findAll();
+    public List<Developer> getAll() throws RuntimeException {
+        List<Developer> res = developerRepository.findAll();
+        if (res != null && res.size() > 0)
+            return res;
+        else
+            throw new RuntimeException("developers is empty");
     }
 
-    public Developer get(Integer id){
-        return developerRepository.findById(id).get();
+    public Developer get(Integer id) {
+        Optional<Developer> res = developerRepository.findById(id);
+        if (res.isPresent())
+            return res.get();
+        else
+            throw new RuntimeException("developer not found");
     }
 
-    public Developer getByName(String name){
+    public Developer getByName(String name) {
         return developerRepository.findByName(name);
     }
 
@@ -33,14 +41,9 @@ public class DeveloperService {
 
     @Transactional(rollbackOn = Exception.class)
     public Developer update(Developer entity) {
-        Optional<Developer> byId = developerRepository.findById(entity.getId());
-
-        if (byId.isPresent()) {
-            Developer originalEntity = byId.get();
-            originalEntity.setName(entity.getName());
-            return originalEntity;
-        } else
-            return null;
+        Developer originalEntity = this.get(entity.getId());
+        originalEntity.setName(entity.getName());
+        return originalEntity;
     }
 
 }
