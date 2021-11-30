@@ -24,4 +24,9 @@ public class DeveloperService {
     public Developer getByName(String name){
         return developerRepository.findByName(name);
     }
+
+    public Developer save(Developer entity){
+        return developerRepository.save(entity);
+    }
+
 }
