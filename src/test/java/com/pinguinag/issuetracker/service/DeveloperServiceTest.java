@@ -68,6 +68,7 @@ class DeveloperServiceTest {
     /*
     * get() find entity
     * */
+    @SneakyThrows
     @Test
     void get() {
         //given
@@ -92,7 +93,7 @@ class DeveloperServiceTest {
 
         //then
         assertThatThrownBy(() -> underTest.get(anyInt()))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(Exception.class)
                 .hasMessageContaining("developer not found");
     }
 
@@ -127,6 +128,7 @@ class DeveloperServiceTest {
     /*
     * update() work correct
     * */
+    @SneakyThrows
     @Test
     void update() {
         //given
@@ -154,7 +156,7 @@ class DeveloperServiceTest {
 
         //then
         assertThatThrownBy(() -> underTest.update(new Developer(0, "")))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(Exception.class)
                 .hasMessageContaining("developer not found");
 
     }
