@@ -15,33 +15,32 @@ public class DeveloperService {
 
     private final DeveloperRepository developerRepository;
 
-    public List<Developer> getAll(){
+    public List<Developer> getAll() {
         return developerRepository.findAll();
     }
 
-    public Developer get(Integer id){
+    public Developer get(Integer id) {
         return developerRepository.findById(id).get();
     }
 
-    public Developer getByName(String name){
+    public Developer getByName(String name) {
         return developerRepository.findByName(name);
     }
 
-    public Developer save(Developer entity){
+    public Developer save(Developer entity) {
         return developerRepository.save(entity);
     }
 
     @Transactional(rollbackOn = Exception.class)
-    public Developer update(Developer entity) throws Exception {
+    public Developer update(Developer entity) {
         Optional<Developer> byId = developerRepository.findById(entity.getId());
 
-        if(byId.isPresent()){
+        if (byId.isPresent()) {
             Developer originalEntity = byId.get();
             originalEntity.setName(entity.getName());
             return originalEntity;
-        }
-        else
-            throw new Exception("Entity not found");
+        } else
+            return null;
     }
-    
+
 }
