@@ -59,7 +59,7 @@
     </dependencies>
 
     <build>
-        <finalName>issue-tracker-${version}</finalName>
+        <finalName>issue-tracker-1.0</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
