@@ -26,22 +26,6 @@ public class StoryService {
 
     private String DATE_FORMAT = "yyyy-MM-dd";
 
-    public List<Story> getDeveloperStoriesForWeek(Integer developerId, String dateString) throws Exception {
-        int week = getWeekOfYear(dateString);
-
-        return storyRepository.getDeveloperStories(developerId)
-                .stream()
-                .filter(p -> {
-                    try {
-                        return getWeekOfYear(getFormattedDate(p.getCreationDate())) == week;
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        return false;
-                    }
-                })
-                .collect(Collectors.toList());
-    }
-
     private String getFormattedDate(LocalDateTime date) throws Exception {
         if (date == null)
             throw new Exception("Date must be not Null");
@@ -63,6 +47,28 @@ public class StoryService {
         return cal.get(Calendar.WEEK_OF_YEAR);
     }
 
+    private boolean canAssignToDeveloper(Story entity, Integer developerId) throws Exception {
+        var developerStories = this.getDeveloperStoriesForWeek(developerId, getFormattedDate(entity.getCreationDate()));
+        return (developerStories.size() < 10);
+    }
+
+
+    public List<Story> getDeveloperStoriesForWeek(Integer developerId, String dateString) throws Exception {
+        int week = getWeekOfYear(dateString);
+
+        return storyRepository.getDeveloperStories(developerId)
+                .stream()
+                .filter(p -> {
+                    try {
+                        return getWeekOfYear(getFormattedDate(p.getCreationDate())) == week;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return false;
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
     public List<Story> getAll() {
         return storyRepository.findAll();
     }
@@ -75,7 +81,7 @@ public class StoryService {
             throw new Exception("Story not found.");
     }
 
-    public Story assignNewStoryToDevelopr(Story entity, Integer developerId) throws Exception {
+    public Story assignNewStoryToDeveloper(Story entity, Integer developerId) throws Exception {
         Developer developer = developerService.get(developerId);
 
         if (canAssignToDeveloper(entity, developerId)) {
@@ -84,11 +90,6 @@ public class StoryService {
             return storyRepository.save(entity);
         } else
             throw new Exception("Story not assigned, developer has 10 stories in the week");
-    }
-
-    private boolean canAssignToDeveloper(Story entity, Integer developerId) throws Exception {
-        var developerStories = this.getDeveloperStoriesForWeek(developerId, getFormattedDate(entity.getCreationDate()));
-        return (developerStories.size() < 10);
     }
 
     @Transactional(rollbackOn = Exception.class)

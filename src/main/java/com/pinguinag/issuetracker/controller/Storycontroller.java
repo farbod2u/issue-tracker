@@ -38,7 +38,7 @@ public class Storycontroller {
     @PostMapping("/assign-story-developer/{developerId}")
     public ResponseEntity<Story> assignNewStoryToDevelopr(@RequestBody Story entity, @PathVariable Integer developerId) {
         try {
-            Story res = storyService.assignNewStoryToDevelopr(entity, developerId);
+            Story res = storyService.assignNewStoryToDeveloper(entity, developerId);
             return new ResponseEntity<>(res, HttpStatus.CREATED);
         } catch (Exception e) {
             e.printStackTrace();
