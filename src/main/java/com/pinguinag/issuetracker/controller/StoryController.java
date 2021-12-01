@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/stories")
-public class Storycontroller {
+public class StoryController {
 
     private final StoryService storyService;
 
