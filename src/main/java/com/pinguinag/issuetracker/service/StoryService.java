@@ -91,7 +91,7 @@ public class StoryService {
         return (developerStories.size() < 10);
     }
 
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     public Story changeStoryDeveloper(Long issueId, Integer developerId) throws Exception {
         Story entity = this.get(issueId);
         Developer developer = developerService.get(developerId);
@@ -101,5 +101,33 @@ public class StoryService {
             return entity;
         } else
             throw new Exception("Story developer dose not change, developer has 10 stories in the week");
+    }
+
+    @Transactional(rollbackOn = Exception.class)
+    public Story advanceStoryEstimate(Long issueId) throws Exception {
+        var entity = this.get(issueId);
+        switch (entity.getEstimatedPoint()) {
+            case New:
+                entity.setEstimatedPoint(Story.EstimatedPointType.Estimated);
+                break;
+            case Estimated:
+                entity.setEstimatedPoint(Story.EstimatedPointType.Completed);
+                break;
+        }
+        return entity;
+    }
+
+    @Transactional(rollbackOn = Exception.class)
+    public Story decreaseStoryEstimate(Long issueId) throws Exception {
+        var entity = this.get(issueId);
+        switch (entity.getEstimatedPoint()) {
+            case Estimated:
+                entity.setEstimatedPoint(Story.EstimatedPointType.New);
+                break;
+            case Completed:
+                entity.setEstimatedPoint(Story.EstimatedPointType.Estimated);
+                break;
+        }
+        return entity;
     }
 }

@@ -15,24 +15,45 @@ import java.util.List;
 public class DeveloperController {
 
     private final DeveloperService developerService;
-/***/
+
+    /***/
     @GetMapping
-    public List<Developer> getAll() throws Exception {
-        return developerService.getAll();
+    public ResponseEntity<List<Developer>> getAll() {
+        try {
+            return new ResponseEntity<>(developerService.getAll(), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/{id}")
-    public Developer get(@PathVariable Integer id) throws Exception {
-        return developerService.get(id);
+    public ResponseEntity<Developer> get(@PathVariable Integer id) {
+        try {
+            return new ResponseEntity<>(developerService.get(id), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping
-    public Developer save(@RequestBody Developer entity) {
-        return developerService.save(entity);
+    public ResponseEntity<Developer> save(@RequestBody Developer entity) {
+        try {
+            return new ResponseEntity<>(developerService.save(entity), HttpStatus.CREATED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+        }
     }
 
     @PutMapping
-    public Developer update(@RequestBody Developer entity) throws Exception {
-        return developerService.update(entity);
+    public ResponseEntity<Developer> update(@RequestBody Developer entity) {
+        try {
+            return new ResponseEntity<>(developerService.update(entity), HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+        }
     }
 }

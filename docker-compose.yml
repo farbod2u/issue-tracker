@@ -1,8 +1,8 @@
 version: "3"
 services:
   issue-tracker:
-    build: .
-    image: issue-tracker:1.0
+    build: src
+    image: issue-tracker:latest
     ports:
       - "8080:8080"
     networks:
