@@ -1,4 +1,4 @@
-to build and run issue-tracker:<br/>
+To build and run issue-tracker:<br/>
 1- First install and run docker and docker composer.<br/>
 2- After that run following commands (Linux or Windows):<br/>
 $ cd /[path to issue-tracker project]/<br/>
