@@ -8,6 +8,8 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -36,8 +38,6 @@ class StoryControllerIntegrationTest {
             new Story(null, "t3", "", LocalDateTime.now(), developer, Story.EstimatedPointType.New)
     );
 
-    private
-
     @BeforeEach
     void setUpAll() {
         developer = developerRepository.save(developer);
@@ -55,7 +55,7 @@ class StoryControllerIntegrationTest {
         //given
         Integer developerId = developer.getId();
         String dateString = "2021-12-02";
-        String url = "/developer-stories/" + developerId + "/" + dateString;
+        String url = "/stories/developer-stories/" + developerId + "/" + dateString;
 
         // when
         ResponseEntity<Story[]> response = testRestTemplate.getForEntity(url, Story[].class);
@@ -69,16 +69,45 @@ class StoryControllerIntegrationTest {
 
     @Test
     void assignNewStoryToDevelopr() {
+        //given
+        Integer developerId = developer.getId();
+        String url = "/stories/assign-story-developer/" + developerId;
+        Story story = new Story(null, "t1", "", LocalDateTime.now(), null, null);
+
+        HttpEntity<Story> request = new HttpEntity<>(story);
+
+        //when
+        ResponseEntity<Story> response = testRestTemplate.postForEntity(url, request, Story.class);
+
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().getIssueId()).isNotNull();
     }
 
     @Test
     void changeStoryDeveloper() {
+        //given
+        Developer developer2 = new Developer(null, "developer2");
+        developerRepository.save(developer2);
+        Integer developerId = developer2.getId();
+        Long issueId = stories.get(0).getIssueId();
+        String url = "/stories/change-story-developer/" + issueId + "/" + developerId;
+
+        //when
+        ResponseEntity<Story> response = testRestTemplate.exchange(url, HttpMethod.PUT, null, Story.class);
+
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.ACCEPTED);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().getDeveloper()).isEqualTo(developer2);
     }
 
     @Test
     void advanceStoryEstimate() {
         //given
-        String url = "/advance-estimate/" + stories.get(0).getIssueId();
+        Long issueId = stories.get(0).getIssueId();
+        String url = "/stories/advance-estimate/" + issueId;
 
         // when
         ResponseEntity<Story> response = testRestTemplate.getForEntity(url, Story.class);
@@ -91,5 +120,16 @@ class StoryControllerIntegrationTest {
 
     @Test
     void decreaseStoryEstimate() {
+        //given
+        Long issueId = stories.get(0).getIssueId();
+        String url = "/stories/decrease-estimate/" + issueId;
+
+        // when
+        ResponseEntity<Story> response = testRestTemplate.getForEntity(url, Story.class);
+        Story result = response.getBody();
+
+        // then
+        assertThat(result).isNotNull();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 }

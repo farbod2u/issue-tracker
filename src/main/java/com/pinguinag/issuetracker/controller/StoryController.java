@@ -18,9 +18,7 @@ public class StoryController {
     private final StoryService storyService;
 
     @GetMapping("/developer-stories/{developerId}/{dateString}")
-    public ResponseEntity<List<Story>> getDeveloperStoriesForWeek(@PathVariable Integer developerId,
-
-                                                                  @PathVariable String dateString) {
+    public ResponseEntity<List<Story>> getDeveloperStoriesForWeek(@PathVariable Integer developerId, @PathVariable String dateString) {
         try {
             List<Story> res = storyService.getDeveloperStoriesForWeek(developerId, dateString);
             return new ResponseEntity<>(res, HttpStatus.OK);
