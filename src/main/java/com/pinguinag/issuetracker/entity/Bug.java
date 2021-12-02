@@ -29,8 +29,12 @@ public class Bug {
     private LocalDateTime creationDate;
 
     @PrePersist
-    void defaultValues(){
+    void defaultValues() {
         this.creationDate = LocalDateTime.now();
+        if (this.priority == null)
+            this.priority = PriorityType.Moinor;
+        if (this.status == null)
+            this.status = StatusType.New;
     }
 
     @ManyToOne
@@ -41,7 +45,7 @@ public class Bug {
     private PriorityType priority;
 
     @Enumerated(EnumType.STRING)
-    private StatusType stastus;
+    private StatusType status;
 
     public static enum PriorityType {
         Critical,
